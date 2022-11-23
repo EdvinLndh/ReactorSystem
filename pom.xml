@@ -25,9 +25,10 @@
 	
 	<modules>
 	    <module>application-skeleton-consumer</module>
-	    <module>application-skeleton-provider</module>
+	    <module>temperature-provider</module>
 	    <module>application-skeleton-subscriber</module>
 	    <module>application-skeleton-publisher</module>
+	    <module>control-rod-control-provider</module>
   	</modules>
 	
 	<dependencies>

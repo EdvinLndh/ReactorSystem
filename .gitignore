@@ -23,7 +23,8 @@
 ### VS Code ###
 .vscode/
 wrapper
-/application-skeleton-provider/target
+/control-rod-control-provider/target
+/temperature-provider/target
 /application-skeleton-consumer/target
 /application-skeleton-publisher/target
 /application-skeleton-subscriber/target
