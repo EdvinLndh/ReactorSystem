@@ -28,6 +28,10 @@ wrapper
 /application-skeleton-consumer/target
 /application-skeleton-publisher/target
 /application-skeleton-subscriber/target
+/documentation
+/application-skeleton-publisher
+/application-skeleton-subscriber
+/**/target
 /mvnw
 /mvnw.cmd
 /.settings
@@ -35,5 +39,6 @@ wrapper
 /.metadata/
 
 *.log
+
 
 

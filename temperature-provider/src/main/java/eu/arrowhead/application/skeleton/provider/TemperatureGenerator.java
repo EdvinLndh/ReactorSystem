@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import eu.arrowhead.application.skeleton.provider.configuration.ConfigConstants;
 import eu.arrowhead.application.skeleton.provider.services.TemperatureDataService;
+import eu.arrowhead.application.skeleton.publisher.event.PresetEventType;
+import eu.arrowhead.application.skeleton.publisher.service.PublisherService;
 
 public class TemperatureGenerator extends Thread {
 
@@ -20,6 +22,9 @@ public class TemperatureGenerator extends Thread {
 	@Autowired
 	private TemperatureDataService dataService;
 
+	@Autowired
+	private PublisherService publisherService;
+
 	private final Logger logger = LogManager.getLogger(TemperatureGenerator.class);
 
 	public TemperatureGenerator() {
@@ -30,18 +35,21 @@ public class TemperatureGenerator extends Thread {
 
 	@Override
 	public void run() {
-		int latestReading = dataService.getLatestTempReadingFromCSV();
-
 		while (true) {
+			
+			int latestReading = dataService.getLatestTempReadingFromCSV();
 			int randNum = rand.nextInt(latestReading);
 			int newReading = (int) Math.round(latestReading * this.linearFactor) + randNum;
+			logger.info("Current reactor temperature: {}", latestReading);
 
-			logger.info("Read temperature: {}", newReading);
 			dataService.writeTempReadingToCSV(newReading);
 
 			if (newReading > ConfigConstants.CRITICAL_TEMPERAUTRE) {
 				// Publish
+				publisherService.publish(PresetEventType.CRITICAL_TEMPERATURE, null,
+						"Critical temperatures have been reached.");
 				logger.warn("Critical temperature {}, must publish!", newReading);
+
 				setShutdownActive(true);
 				setLinearFactor(0.1);
 			} else if (newReading > (int) Math.round(ConfigConstants.CRITICAL_TEMPERAUTRE / 2)) {
@@ -51,7 +59,7 @@ public class TemperatureGenerator extends Thread {
 			} else if (newReading <= (int) Math.round(ConfigConstants.CRITICAL_TEMPERAUTRE / 3)) {
 				setLinearFactor(1);
 			}
-			latestReading = newReading;
+			// latestReading = newReading;
 			try {
 				Thread.sleep(ConfigConstants.SLEEP_TIME_MILLIS);
 			} catch (InterruptedException e) {

@@ -7,7 +7,7 @@
 		<version>4.4.0.2</version>
   	</parent>
 	
-	<artifactId>arrowhead-application-skeleton-consumer</artifactId>
+	<artifactId>reactor-consumer</artifactId>
 	<name>Arrowhead Consumer Skeleton</name>
 	
 	<build>

@@ -7,9 +7,11 @@ import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.cert.CertificateException;
+import java.time.ZonedDateTime;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -26,9 +28,12 @@ import ai.aitia.arrowhead.application.library.util.ApplicationCommonConstants;
 import eu.arrowhead.application.skeleton.provider.configuration.ConfigConstants;
 import eu.arrowhead.application.skeleton.provider.security.ProviderSecurityConfig;
 import eu.arrowhead.application.skeleton.provider.services.TemperatureDataService;
+import eu.arrowhead.application.skeleton.publisher.PublisherConstants;
+import eu.arrowhead.application.skeleton.publisher.event.PresetEventType;
 import eu.arrowhead.common.CommonConstants;
 import eu.arrowhead.common.Utilities;
 import eu.arrowhead.common.core.CoreSystem;
+import eu.arrowhead.common.dto.shared.EventPublishRequestDTO;
 import eu.arrowhead.common.dto.shared.ServiceRegistryRequestDTO;
 import eu.arrowhead.common.dto.shared.ServiceSecurityType;
 import eu.arrowhead.common.dto.shared.SystemRequestDTO;
@@ -91,6 +96,12 @@ public class ProviderApplicationInitListener extends ApplicationInitListener {
 			logger.info("TokenSecurityFilter in not active");
 		}
 
+		if (arrowheadService.echoCoreSystem(CoreSystem.EVENTHANDLER)) {
+			arrowheadService.updateCoreServiceURIs(CoreSystem.EVENTHANDLER);
+
+			publishInitStartedEvent();
+		}
+
 		final ServiceRegistryRequestDTO temperatureService = createServiceRegistryRequest(
 				ConfigConstants.GET_LATEST_TEMP_READING_DEFINITION, ConfigConstants.GET_LATEST_TEMP_URI,
 				HttpMethod.GET);
@@ -99,7 +110,7 @@ public class ProviderApplicationInitListener extends ApplicationInitListener {
 		TemperatureGenerator temperatureGenerator = new TemperatureGenerator();
 		applicationContext.getAutowireCapableBeanFactory().autowireBean(temperatureGenerator);
 		temperatureGenerator.start();
-		// TODO: implement here any custom behavior on application start up
+
 	}
 
 	private ServiceRegistryRequestDTO createServiceRegistryRequest(String serviceDefinition,
@@ -139,6 +150,7 @@ public class ProviderApplicationInitListener extends ApplicationInitListener {
 		arrowheadService.unregisterServiceFromServiceRegistry(ConfigConstants.GET_LATEST_TEMP_READING_DEFINITION,
 				ConfigConstants.GET_LATEST_TEMP_URI);
 		logger.info("Service unregistered: {}", ConfigConstants.GET_LATEST_TEMP_READING_DEFINITION);
+		publishDestroyedEvent();
 	}
 
 	// =================================================================================================
@@ -173,4 +185,55 @@ public class ProviderApplicationInitListener extends ApplicationInitListener {
 		providerSecurityConfig.getTokenSecurityFilter().setMyPrivateKey(providerPrivateKey);
 
 	}
+
+	private void publishDestroyedEvent() {
+		final String eventType = PresetEventType.PUBLISHER_DESTROYED.getEventTypeName();
+
+		final SystemRequestDTO source = new SystemRequestDTO();
+		source.setSystemName(mySystemName);
+		source.setAddress(mySystemAddress);
+		source.setPort(mySystemPort);
+		if (sslEnabled) {
+			source.setAuthenticationInfo(
+					Base64.getEncoder().encodeToString(arrowheadService.getMyPublicKey().getEncoded()));
+		}
+
+		final Map<String, String> metadata = null;
+		final String payload = PublisherConstants.PUBLISHR_DESTROYED_EVENT_PAYLOAD;
+		final String timeStamp = Utilities.convertZonedDateTimeToUTCString(ZonedDateTime.now());
+
+		final EventPublishRequestDTO publishRequestDTO = new EventPublishRequestDTO(
+				eventType,
+				source,
+				metadata,
+				payload,
+				timeStamp);
+
+		arrowheadService.publishToEventHandler(publishRequestDTO);
+	}
+
+	// Sample implementation of event publishing at application init time
+	private void publishInitStartedEvent() {
+		logger.debug("publishInitStartedEvent started...");
+
+		final String eventType = PresetEventType.START_INIT.getEventTypeName();
+
+		final SystemRequestDTO source = new SystemRequestDTO();
+		source.setSystemName(mySystemName);
+		source.setAddress(mySystemAddress);
+		source.setPort(mySystemPort);
+		if (sslEnabled) {
+			source.setAuthenticationInfo(
+					Base64.getEncoder().encodeToString(arrowheadService.getMyPublicKey().getEncoded()));
+		}
+
+		final Map<String, String> metadata = null;
+		final String payload = PublisherConstants.START_INIT_EVENT_PAYLOAD;
+		final String timeStamp = Utilities.convertZonedDateTimeToUTCString(ZonedDateTime.now());
+		final EventPublishRequestDTO publishRequestDTO = new EventPublishRequestDTO(eventType, source, metadata,
+				payload, timeStamp);
+
+		arrowheadService.publishToEventHandler(publishRequestDTO);
+	}
+
 }

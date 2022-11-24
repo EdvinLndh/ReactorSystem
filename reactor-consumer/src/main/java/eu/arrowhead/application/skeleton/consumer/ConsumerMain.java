@@ -1,4 +1,4 @@
-package eu.arrowhead.application.skeleton.subscriber;
+package eu.arrowhead.application.skeleton.consumer;
 
 import java.util.Base64;
 import java.util.Map;
@@ -13,21 +13,35 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.http.HttpMethod;
 
 import ai.aitia.arrowhead.application.library.ArrowheadService;
 import ai.aitia.arrowhead.application.library.util.ApplicationCommonConstants;
-import eu.arrowhead.application.skeleton.subscriber.constants.SubscriberConstants;
+import eu.arrowhead.application.skeleton.subscriber.ConfigEventProperties;
+import eu.arrowhead.application.skeleton.subscriber.SubscriberConstants;
+import eu.arrowhead.application.skeleton.subscriber.SubscriberUtilities;
 import eu.arrowhead.common.CommonConstants;
+import eu.arrowhead.common.Utilities;
+import eu.arrowhead.common.dto.shared.OrchestrationFlags.Flag;
+import eu.arrowhead.common.dto.shared.OrchestrationFormRequestDTO;
+import eu.arrowhead.common.dto.shared.OrchestrationFormRequestDTO.Builder;
+import eu.arrowhead.common.dto.shared.OrchestrationResponseDTO;
+import eu.arrowhead.common.dto.shared.OrchestrationResultDTO;
+import eu.arrowhead.common.dto.shared.ServiceQueryFormDTO;
 import eu.arrowhead.common.dto.shared.SystemRequestDTO;
+import eu.arrowhead.common.exception.ArrowheadException;
 import eu.arrowhead.common.exception.InvalidParameterException;
 
 @SpringBootApplication
-@EnableConfigurationProperties(ConfigEventProperites.class)
-@ComponentScan(basePackages = { CommonConstants.BASE_PACKAGE, "ai.aitia" }) // TODO: add custom packages if any
-public class SubscriberMain implements ApplicationRunner {
+@EnableConfigurationProperties(ConfigEventProperties.class)
+@ComponentScan(basePackages = { CommonConstants.BASE_PACKAGE, "ai.aitia" })
+public class ConsumerMain implements ApplicationRunner {
 
 	// =================================================================================================
 	// members
+
+	@Autowired
+	private ArrowheadService arrowheadService;
 
 	@Value(SubscriberConstants.$PRESET_EVENT_TYPES_WD)
 	private String presetEvents;
@@ -45,35 +59,29 @@ public class SubscriberMain implements ApplicationRunner {
 	private boolean sslEnabled;
 
 	@Autowired
-	private ArrowheadService arrowheadService;
+	private ConfigEventProperties configEventProperties;
 
-	@Autowired
-	private ConfigEventProperites configEventProperites;
-
-	private final Logger logger = LogManager.getLogger(SubscriberApplicationInitListener.class);
+	private final Logger logger = LogManager.getLogger(ConsumerMain.class);
 
 	// =================================================================================================
 	// methods
 
-	// -------------------------------------------------------------------------------------------------
+	// ------------------------------------------------------------------------------------------------
 	public static void main(final String[] args) {
-		SpringApplication.run(SubscriberMain.class, args);
-
+		SpringApplication.run(ConsumerMain.class, args);
 	}
 
+	// -------------------------------------------------------------------------------------------------
 	@Override
 	public void run(final ApplicationArguments args) throws Exception {
+		// SIMPLE EXAMPLE OF INITIATING AN ORCHESTRATION
+
 		subscribeToPresetEvents();
 	}
 
-	// =================================================================================================
-	// assistant methods
-
-	// -------------------------------------------------------------------------------------------------
-	// Sample implementation of subscription when application run started
 	private void subscribeToPresetEvents() {
 
-		final Map<String, String> eventTypeMap = configEventProperites.getEventTypeURIMap();
+		final Map<String, String> eventTypeMap = configEventProperties.getEventTypeURIMap();
 
 		if (eventTypeMap == null) {
 			logger.info("No preset events to subscribe.");
@@ -100,6 +108,7 @@ public class SubscriberMain implements ApplicationRunner {
 				try {
 					arrowheadService.subscribeToEventHandler(SubscriberUtilities.createSubscriptionRequestDTO(eventType,
 							subscriber, eventTypeMap.get(eventType)));
+					logger.info("Subscribing to {}", eventType);
 				} catch (final InvalidParameterException ex) {
 					if (ex.getMessage().contains("Subscription violates uniqueConstraint rules")) {
 						logger.debug("Subscription is already in DB");
