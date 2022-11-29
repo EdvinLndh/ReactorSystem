@@ -7,7 +7,6 @@ import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.cert.CertificateException;
-import java.util.Base64;
 import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
@@ -24,14 +23,11 @@ import ai.aitia.arrowhead.application.library.config.ApplicationInitListener;
 import ai.aitia.arrowhead.application.library.util.ApplicationCommonConstants;
 import eu.arrowhead.application.skeleton.subscriber.ConfigEventProperties;
 import eu.arrowhead.application.skeleton.subscriber.SubscriberConstants;
-import eu.arrowhead.application.skeleton.subscriber.SubscriberUtilities;
 import eu.arrowhead.application.skeleton.subscriber.security.SubscriberSecurityConfig;
 import eu.arrowhead.common.CommonConstants;
 import eu.arrowhead.common.Utilities;
 import eu.arrowhead.common.core.CoreSystem;
-import eu.arrowhead.common.dto.shared.SystemRequestDTO;
 import eu.arrowhead.common.exception.ArrowheadException;
-import eu.arrowhead.common.exception.InvalidParameterException;
 
 @Component
 public class ConsumerApplicationInitListener extends ApplicationInitListener {
@@ -71,6 +67,11 @@ public class ConsumerApplicationInitListener extends ApplicationInitListener {
 	// =================================================================================================
 	// methods
 
+	@Bean(SubscriberConstants.CONSUMER_TASK)
+	public ConsumerTaskRunner GetTask() {
+		return new ConsumerTaskRunner();
+	}
+
 	// -------------------------------------------------------------------------------------------------
 	@Override
 	protected void customInit(final ContextRefreshedEvent event) {
@@ -101,13 +102,7 @@ public class ConsumerApplicationInitListener extends ApplicationInitListener {
 
 		if (arrowheadService.echoCoreSystem(CoreSystem.EVENTHANDLER)) {
 			arrowheadService.updateCoreServiceURIs(CoreSystem.EVENTHANDLER);
-			// subscribeToPresetEvents();
 		}
-
-		// Initialize Arrowhead Context
-		arrowheadService.updateCoreServiceURIs(CoreSystem.ORCHESTRATOR);
-
-		// TODO: implement here any custom behavior on application start up
 
 		ConsumerTaskRunner taskRunner = applicationContext.getBean(SubscriberConstants.CONSUMER_TASK,
 				ConsumerTaskRunner.class);
@@ -115,15 +110,9 @@ public class ConsumerApplicationInitListener extends ApplicationInitListener {
 
 	}
 
-	@Bean(SubscriberConstants.CONSUMER_TASK)
-	public ConsumerTaskRunner GetTask() {
-		return new ConsumerTaskRunner();
-	}
-
 	// -------------------------------------------------------------------------------------------------
 	@Override
 	public void customDestroy() {
-		// TODO: implement here any custom behavior on application shutdown
 		final Map<String, String> eventTypeMap = configEventProperties.getEventTypeURIMap();
 		if (eventTypeMap == null) {
 			logger.info("No preset events to unsubscribe.");
@@ -132,45 +121,6 @@ public class ConsumerApplicationInitListener extends ApplicationInitListener {
 				arrowheadService.unsubscribeFromEventHandler(eventType, applicationSystemName, applicationSystemAddress,
 						applicationSystemPort);
 				logger.info("Unsubscribing to {}.", eventType);
-			}
-		}
-	}
-
-	// -------------------------------------------------------------------------------------------------
-	private void subscribeToPresetEvents() {
-
-		final Map<String, String> eventTypeMap = configEventProperties.getEventTypeURIMap();
-
-		if (eventTypeMap == null) {
-			logger.info("No preset events to subscribe.");
-		} else {
-			final SystemRequestDTO subscriber = new SystemRequestDTO();
-			subscriber.setSystemName(applicationSystemName);
-			subscriber.setAddress(applicationSystemAddress);
-			subscriber.setPort(applicationSystemPort);
-			if (sslEnabled) {
-				subscriber.setAuthenticationInfo(
-						Base64.getEncoder().encodeToString(arrowheadService.getMyPublicKey().getEncoded()));
-			}
-
-			for (final String eventType : eventTypeMap.keySet()) {
-				try {
-					arrowheadService.unsubscribeFromEventHandler(eventType, applicationSystemName,
-							applicationSystemAddress, applicationSystemPort);
-				} catch (final Exception ex) {
-					logger.debug("Exception happend in subscription initalization " + ex);
-				}
-
-				try {
-					arrowheadService.subscribeToEventHandler(SubscriberUtilities.createSubscriptionRequestDTO(eventType,
-							subscriber, eventTypeMap.get(eventType)));
-				} catch (final InvalidParameterException ex) {
-					if (ex.getMessage().contains("Subscription violates uniqueConstraint rules")) {
-						logger.debug("Subscription is already in DB");
-					}
-				} catch (final Exception ex) {
-					logger.debug("Could not subscribe to EventType: " + eventType);
-				}
 			}
 		}
 	}

@@ -13,23 +13,13 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.http.HttpMethod;
-
 import ai.aitia.arrowhead.application.library.ArrowheadService;
 import ai.aitia.arrowhead.application.library.util.ApplicationCommonConstants;
 import eu.arrowhead.application.skeleton.subscriber.ConfigEventProperties;
 import eu.arrowhead.application.skeleton.subscriber.SubscriberConstants;
 import eu.arrowhead.application.skeleton.subscriber.SubscriberUtilities;
 import eu.arrowhead.common.CommonConstants;
-import eu.arrowhead.common.Utilities;
-import eu.arrowhead.common.dto.shared.OrchestrationFlags.Flag;
-import eu.arrowhead.common.dto.shared.OrchestrationFormRequestDTO;
-import eu.arrowhead.common.dto.shared.OrchestrationFormRequestDTO.Builder;
-import eu.arrowhead.common.dto.shared.OrchestrationResponseDTO;
-import eu.arrowhead.common.dto.shared.OrchestrationResultDTO;
-import eu.arrowhead.common.dto.shared.ServiceQueryFormDTO;
 import eu.arrowhead.common.dto.shared.SystemRequestDTO;
-import eu.arrowhead.common.exception.ArrowheadException;
 import eu.arrowhead.common.exception.InvalidParameterException;
 
 @SpringBootApplication
@@ -74,8 +64,6 @@ public class ConsumerMain implements ApplicationRunner {
 	// -------------------------------------------------------------------------------------------------
 	@Override
 	public void run(final ApplicationArguments args) throws Exception {
-		// SIMPLE EXAMPLE OF INITIATING AN ORCHESTRATION
-
 		subscribeToPresetEvents();
 	}
 

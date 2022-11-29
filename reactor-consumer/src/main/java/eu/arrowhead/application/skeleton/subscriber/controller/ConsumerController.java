@@ -18,21 +18,21 @@ public class ConsumerController {
 	// -------------------------------------------------------------------------------------------------
 	@PostMapping(path = SubscriberConstants.REQUEST_RECEIVED_NOTIFICATION_URI)
 	public void receiveEventRequestReceived(@RequestBody final EventDTO event) {
-		logger.info("receiveEventRequestReceived started...");
-
+		logger.info("Received event destroyed event.");
 	}
 
 	// -------------------------------------------------------------------------------------------------
 	@PostMapping(path = SubscriberConstants.PUBLISHER_DESTORYED_NOTIFICATION_URI)
 	public void receiveEventDestroyed(@RequestBody final EventDTO event) {
-		logger.info("receiveEventDestroyed started... ");
+		logger.info("Received event destroyed event.");
 
 	}
 
 	// -------------------------------------------------------------------------------------------------
 	@PostMapping(path = SubscriberConstants.CRITICAL_TEMPERATURE_NOTIFICATION_URI)
 	public void criticalTempEventReceived(@RequestBody final EventDTO event) {
-		logger.debug("criticalTempEventReceived started... ");
-		logger.info("Received critical temperature event. Inserting all rods.");
+		logger.info("Received critical temperature event with message: {}\nTaking action: Inserting all control rods.",
+				event.getPayload());
+
 	}
 }
