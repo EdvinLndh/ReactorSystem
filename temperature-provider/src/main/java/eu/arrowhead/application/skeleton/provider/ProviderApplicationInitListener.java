@@ -26,10 +26,10 @@ import ai.aitia.arrowhead.application.library.ArrowheadService;
 import ai.aitia.arrowhead.application.library.config.ApplicationInitListener;
 import ai.aitia.arrowhead.application.library.util.ApplicationCommonConstants;
 import eu.arrowhead.application.skeleton.provider.configuration.ConfigConstants;
-import eu.arrowhead.application.skeleton.provider.security.ProviderSecurityConfig;
 import eu.arrowhead.application.skeleton.provider.services.TemperatureDataService;
 import eu.arrowhead.application.skeleton.publisher.PublisherConstants;
 import eu.arrowhead.application.skeleton.publisher.event.PresetEventType;
+import eu.arrowhead.application.skeleton.publisher.security.PublisherSecurityConfig;
 import eu.arrowhead.common.CommonConstants;
 import eu.arrowhead.common.Utilities;
 import eu.arrowhead.common.core.CoreSystem;
@@ -52,7 +52,7 @@ public class ProviderApplicationInitListener extends ApplicationInitListener {
 	ApplicationContext applicationContext;
 
 	@Autowired
-	private ProviderSecurityConfig providerSecurityConfig;
+	private PublisherSecurityConfig publisherSecurityConfig;
 
 	@Autowired
 	private TemperatureDataService dataService;
@@ -98,7 +98,6 @@ public class ProviderApplicationInitListener extends ApplicationInitListener {
 
 		if (arrowheadService.echoCoreSystem(CoreSystem.EVENTHANDLER)) {
 			arrowheadService.updateCoreServiceURIs(CoreSystem.EVENTHANDLER);
-
 			publishInitStartedEvent();
 		}
 
@@ -181,8 +180,8 @@ public class ProviderApplicationInitListener extends ApplicationInitListener {
 		}
 		final PrivateKey providerPrivateKey = Utilities.getPrivateKey(keystore, sslProperties.getKeyPassword());
 
-		providerSecurityConfig.getTokenSecurityFilter().setAuthorizationPublicKey(authorizationPublicKey);
-		providerSecurityConfig.getTokenSecurityFilter().setMyPrivateKey(providerPrivateKey);
+		publisherSecurityConfig.getTokenSecurityFilter().setAuthorizationPublicKey(authorizationPublicKey);
+		publisherSecurityConfig.getTokenSecurityFilter().setMyPrivateKey(providerPrivateKey);
 
 	}
 

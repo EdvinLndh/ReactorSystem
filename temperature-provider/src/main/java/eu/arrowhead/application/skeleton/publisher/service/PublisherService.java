@@ -40,6 +40,7 @@ public class PublisherService {
 	// Sample implementation of event publishing of preset event types
 	public void publish(final PresetEventType eventType, final Map<String, String> metadata, final String payload) {
 		final EventPublishRequestDTO request = getPublishRequest(eventType, metadata, payload);
+		logger.info("Publishing request of type: {}", eventType);
 		arrowheadService.publishToEventHandler(request);
 	}
 
@@ -77,5 +78,33 @@ public class PublisherService {
 		}
 
 		return source;
+	}
+
+	public void sendNotification() {
+
+		logger.info("Sending notification");
+		final String eventType = PresetEventType.CRITICAL_TEMPERATURE.getEventTypeName();
+
+		final SystemRequestDTO source = new SystemRequestDTO();
+		source.setSystemName(applicationSystemName);
+		source.setAddress(applicationSystemAddress);
+		source.setPort(applicationSystemPort);
+		if (sslEnabled) {
+			source.setAuthenticationInfo(
+					Base64.getEncoder().encodeToString(arrowheadService.getMyPublicKey().getEncoded()));
+		}
+
+		final Map<String, String> metadata = null;
+		final String payload = "Hej";
+		final String timeStamp = Utilities.convertZonedDateTimeToUTCString(ZonedDateTime.now());
+
+		final EventPublishRequestDTO publishRequestDTO = new EventPublishRequestDTO(
+				eventType,
+				source,
+				metadata,
+				payload,
+				timeStamp);
+
+		arrowheadService.publishToEventHandler(publishRequestDTO);
 	}
 }

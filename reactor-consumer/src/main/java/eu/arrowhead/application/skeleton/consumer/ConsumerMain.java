@@ -102,7 +102,7 @@ public class ConsumerMain implements ApplicationRunner {
 					arrowheadService.unsubscribeFromEventHandler(eventType, applicationSystemName,
 							applicationSystemAddress, applicationSystemPort);
 				} catch (final Exception ex) {
-					logger.debug("Could not unsubscribe from EventType: " + eventType);
+					logger.info("Could not unsubscribe from EventType: " + eventType);
 				}
 
 				try {
@@ -111,10 +111,10 @@ public class ConsumerMain implements ApplicationRunner {
 					logger.info("Subscribing to {}", eventType);
 				} catch (final InvalidParameterException ex) {
 					if (ex.getMessage().contains("Subscription violates uniqueConstraint rules")) {
-						logger.debug("Subscription is already in DB");
+						logger.info("Subscription is already in DB");
 					}
 				} catch (final Exception ex) {
-					logger.debug("Could not subscribe to EventType: " + eventType);
+					logger.info("Could not subscribe to EventType: " + eventType);
 				}
 			}
 		}

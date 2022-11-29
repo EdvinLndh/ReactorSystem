@@ -17,6 +17,7 @@ import eu.arrowhead.common.dto.shared.ServiceQueryFormDTO;
 import eu.arrowhead.common.dto.shared.OrchestrationFlags.Flag;
 import eu.arrowhead.common.dto.shared.OrchestrationFormRequestDTO.Builder;
 import eu.arrowhead.common.exception.ArrowheadException;
+import eu.arrowhead.common.exception.UnavailableServerException;
 
 public class ConsumerTaskRunner extends Thread {
 
@@ -48,15 +49,23 @@ public class ConsumerTaskRunner extends Thread {
 		OrchestrationResultDTO rodOrchestration = orchestrateRodService();
 		while (true) {
 			if (rodOrchestration != null) {
-				int rodInsertionPercentage = consumeRodService(rodOrchestration);
-				logger.info("Consumed rod insertion service. Inserting rods at {}%", rodInsertionPercentage);
+				try {
+					int rodInsertionPercentage = consumeRodService(rodOrchestration);
+					logger.info("Consumed rod insertion service. Inserting rods at {}%", rodInsertionPercentage);
+
+				} catch (UnavailableServerException e) {
+					logger.warn("Rod service unavaible, caught exception: {}", e.getMessage());
+				}
+			} else {
+				logger.info("Trying to reach rod service again.");
+				rodOrchestration = orchestrateRodService();
 			}
 
-			// try {
-			// Thread.sleep(5000);
-			// } catch (InterruptedException e) {
-			// logger.warn("Interrupted by {}", e);
-			// }
+			try {
+				Thread.sleep(5000);
+			} catch (InterruptedException e) {
+				logger.warn("Interrupted by {}", e);
+			}
 		}
 	}
 
@@ -101,7 +110,7 @@ public class ConsumerTaskRunner extends Thread {
 		return result;
 	}
 
-	public int consumeRodService(OrchestrationResultDTO result) {
+	public int consumeRodService(OrchestrationResultDTO result) throws UnavailableServerException {
 		final HttpMethod httpMethod = HttpMethod.GET;// Http method should be specified in the description of the
 														// service.
 		final String address = result.getProvider().getAddress();
@@ -121,6 +130,7 @@ public class ConsumerTaskRunner extends Thread {
 
 		logger.info("{}", consumedService);
 		return consumedService;
+
 	}
 
 	private void printOut(final Object object) {

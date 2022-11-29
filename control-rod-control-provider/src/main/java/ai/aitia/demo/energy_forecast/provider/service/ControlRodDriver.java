@@ -43,23 +43,6 @@ public class ControlRodDriver {
 
 	}
 
-	// -------------------------------------------------------------------------------------------------
-	// public EnergyDetailsListDTO getIndoorEnergyDetails(final long building, final
-	// long from, final long to) {
-	// final OrchestrationResultDTO orchestrationResult =
-	// orchestrate(EFCommonConstants.INDOOR_ENERGY_DETAILS_SERVICE);
-	// return consumeEnergyDetailsService(orchestrationResult, building, from, to);
-	// }
-
-	// //
-	// -------------------------------------------------------------------------------------------------
-	// public EnergyDetailsListDTO getOutdoorEnergyDetails(final long building,
-	// final long from, final long to) {
-	// final OrchestrationResultDTO orchestrationResult = orchestrate(
-	// EFCommonConstants.OUTDOOR_ENERGY_DETAILS_SERVICE);
-	// return consumeEnergyDetailsService(orchestrationResult, building, from, to);
-	// }
-
 	// =================================================================================================
 	// assistant methods
 

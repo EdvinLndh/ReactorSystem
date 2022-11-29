@@ -101,7 +101,7 @@ public class ConsumerApplicationInitListener extends ApplicationInitListener {
 
 		if (arrowheadService.echoCoreSystem(CoreSystem.EVENTHANDLER)) {
 			arrowheadService.updateCoreServiceURIs(CoreSystem.EVENTHANDLER);
-			subscribeToPresetEvents();
+			// subscribeToPresetEvents();
 		}
 
 		// Initialize Arrowhead Context

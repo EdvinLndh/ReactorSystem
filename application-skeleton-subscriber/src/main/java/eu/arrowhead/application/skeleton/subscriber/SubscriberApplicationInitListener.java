@@ -54,11 +54,11 @@ public class SubscriberApplicationInitListener extends ApplicationInitListener {
 
 	@Value(ApplicationCommonConstants.$APPLICATION_SERVER_PORT_WD)
 	private int applicationSystemPort;
-
-	private final Logger logger = LogManager.getLogger(SubscriberApplicationInitListener.class);
-
 	@Autowired
 	private ConfigEventProperites configEventProperites;
+	
+	private final Logger logger = LogManager.getLogger(SubscriberApplicationInitListener.class);
+
 
 	//=================================================================================================
 	// methods

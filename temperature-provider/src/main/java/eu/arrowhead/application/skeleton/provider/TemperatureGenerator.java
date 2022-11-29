@@ -36,13 +36,16 @@ public class TemperatureGenerator extends Thread {
 	@Override
 	public void run() {
 		while (true) {
-			
+
 			int latestReading = dataService.getLatestTempReadingFromCSV();
 			int randNum = rand.nextInt(latestReading);
 			int newReading = (int) Math.round(latestReading * this.linearFactor) + randNum;
 			logger.info("Current reactor temperature: {}", latestReading);
 
 			dataService.writeTempReadingToCSV(newReading);
+
+			// DEBUG
+			publisherService.sendNotification();
 
 			if (newReading > ConfigConstants.CRITICAL_TEMPERAUTRE) {
 				// Publish
