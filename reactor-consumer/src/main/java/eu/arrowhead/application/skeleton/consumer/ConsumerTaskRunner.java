@@ -7,6 +7,7 @@ import org.springframework.http.HttpMethod;
 
 import ai.aitia.arrowhead.application.library.ArrowheadService;
 import ai.aitia.arrowhead.application.library.util.ApplicationCommonConstants;
+import ai.aitia.reactor_common.dto.RodInsertionResponseDTO;
 import eu.arrowhead.common.CommonConstants;
 import eu.arrowhead.common.SSLProperties;
 import eu.arrowhead.common.Utilities;
@@ -50,8 +51,10 @@ public class ConsumerTaskRunner extends Thread {
 		while (true) {
 			if (rodOrchestration != null) {
 				try {
-					int rodInsertionPercentage = consumeRodService(rodOrchestration);
-					logger.info("Consumed rod insertion service. Inserting rods at {}%", rodInsertionPercentage);
+
+					RodInsertionResponseDTO rodInsertionResponse = consumeRodService(rodOrchestration);
+					logger.info("Consumed rod insertion service. Inserting rods at {}%",
+							rodInsertionResponse.getRodInsertionPrecentage());
 
 				} catch (UnavailableServerException e) {
 					logger.warn("Rod service unavaible, caught exception: {}", e.getMessage());
@@ -99,7 +102,7 @@ public class ConsumerTaskRunner extends Thread {
 		return result;
 	}
 
-	public int consumeRodService(OrchestrationResultDTO result) throws UnavailableServerException {
+	public RodInsertionResponseDTO consumeRodService(OrchestrationResultDTO result) throws UnavailableServerException {
 		final HttpMethod httpMethod = HttpMethod.GET;
 		final String address = result.getProvider().getAddress();
 		final int port = result.getProvider().getPort();
@@ -111,10 +114,11 @@ public class ConsumerTaskRunner extends Thread {
 		}
 		final Object payload = null;
 
-		final int consumedService = arrowheadService.consumeServiceHTTP(Integer.class, httpMethod, address, port,
+		final RodInsertionResponseDTO consumedService = arrowheadService.consumeServiceHTTP(
+				RodInsertionResponseDTO.class, httpMethod,
+				address, port,
 				serviceUri, interfaceName, token, payload);
 
-		logger.info("{}", consumedService);
 		return consumedService;
 
 	}

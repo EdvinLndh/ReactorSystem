@@ -9,6 +9,14 @@
 	
 	<artifactId>temperature-provider</artifactId>
 	<name>Arrowhead Provider Skeleton</name>
+
+	<dependencies>
+		<dependency>
+			<groupId>eu.arrowhead</groupId>
+			<artifactId>reactor-common-util</artifactId>
+			<version>4.4.0.2</version>
+		</dependency>
+	</dependencies>
 	
 	<build>
 		<plugins>

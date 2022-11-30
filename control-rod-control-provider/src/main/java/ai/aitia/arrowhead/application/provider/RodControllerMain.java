@@ -1,4 +1,4 @@
-package ai.aitia.demo.energy_forecast.provider;
+package ai.aitia.arrowhead.application.provider;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

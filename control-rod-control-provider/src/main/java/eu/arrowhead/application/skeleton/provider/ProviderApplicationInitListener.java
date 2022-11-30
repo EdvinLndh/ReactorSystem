@@ -19,10 +19,10 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 
-import ai.aitia.demo.energy_forecast.provider.RodControllerConstants;
 import ai.aitia.arrowhead.application.library.ArrowheadService;
 import ai.aitia.arrowhead.application.library.config.ApplicationInitListener;
 import ai.aitia.arrowhead.application.library.util.ApplicationCommonConstants;
+import ai.aitia.arrowhead.application.provider.RodControllerConstants;
 import eu.arrowhead.application.skeleton.provider.configuration.ConfigConstants;
 import eu.arrowhead.application.skeleton.provider.security.ProviderSecurityConfig;
 import eu.arrowhead.common.CommonConstants;

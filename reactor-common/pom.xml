@@ -8,16 +8,19 @@
     <version>4.4.0.2</version>
   </parent>
   
-  <artifactId>control-rod-control-provider</artifactId>
-  <name>Arrowhead Control Rod Provider</name>
-
-  	<dependencies>
-		<dependency>
-			<groupId>eu.arrowhead</groupId>
-			<artifactId>reactor-common-util</artifactId>
-			<version>4.4.0.2</version>
-		</dependency>
-	</dependencies>
+  <artifactId>reactor-common-util</artifactId>
+  <name>Arrowhead Reactor Common</name>
   
-  
+  <build>
+		<plugins>
+			<plugin>
+    			<groupId>org.springframework.boot</groupId>
+    			<artifactId>spring-boot-maven-plugin</artifactId>
+    			<configuration>
+          			<skip>true</skip>
+    			</configuration>
+  			</plugin>  	  			
+  		</plugins>
+  	</build>
+ 
 </project>

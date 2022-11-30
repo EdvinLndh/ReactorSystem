@@ -1,12 +1,13 @@
-package ai.aitia.demo.energy_forecast.provider.controller;
+package ai.aitia.arrowhead.application.provider.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import ai.aitia.demo.energy_forecast.provider.RodControllerConstants;
-import ai.aitia.demo.energy_forecast.provider.service.RodControlService;
+import ai.aitia.arrowhead.application.provider.RodControllerConstants;
+import ai.aitia.arrowhead.application.provider.service.RodControlService;
+import ai.aitia.reactor_common.dto.RodInsertionResponseDTO;
 import eu.arrowhead.common.CommonConstants;
 
 @RestController
@@ -30,7 +31,7 @@ public class RodControllerController {
 
 	@GetMapping(path = RodControllerConstants.GET_ROD_INSERTION_URI)
 	@ResponseBody
-	public int getControlRodInsertion() {
+	public RodInsertionResponseDTO getControlRodInsertion() {
 		return rodControlService.calculateInsertion();
 	}
 }

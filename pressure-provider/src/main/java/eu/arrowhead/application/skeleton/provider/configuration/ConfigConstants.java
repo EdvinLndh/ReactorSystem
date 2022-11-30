@@ -7,12 +7,12 @@ public class ConfigConstants {
 	public static final String BASE_PACKAGE = "ai.aitia";
 	public static final int MIN_MAXKEEPALIVE_REQUESTS = 1;
 	public static final int MAX_MAXKEEPALIVE_REQUESTS = 1000;
-	public static final String GET_LATEST_TEMP_READING_DEFINITION = "get-latest-temp";
-	public static final String GET_LATEST_TEMP_URI = "/latest-temp";
+	public static final String GET_LATEST_PRESSURE_READING_DEFINITION = "get-latest-pressure";
+	public static final String GET_LATEST_PRESSURE_URI = "/latest-pressure";
 	public static final String HTTP_METHOD = "http-method";
 	public static final String INTERFACE_SECURE = "HTTP-SECURE-JSON";
 	public static final String INTERFACE_INSECURE = "HTTP-INSECURE-JSON";
-	public static final int CRITICAL_TEMPERAUTRE = 450;
+	public static final int CRITICAL_PRESSURE = 450;
 	public static final int SLEEP_TIME_MILLIS = 5000;
 
 	// =================================================================================================

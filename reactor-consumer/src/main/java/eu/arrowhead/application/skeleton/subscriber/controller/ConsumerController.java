@@ -35,4 +35,12 @@ public class ConsumerController {
 				event.getPayload());
 
 	}
+
+	// -------------------------------------------------------------------------------------------------
+	@PostMapping(path = SubscriberConstants.CRITICAL_PRESSURE_NOTIFICATION_URI)
+	public void criticalPressureEventReceived(@RequestBody final EventDTO event) {
+		logger.info("Received critical pressure event with message: {}\nTaking action: Inserting all control rods.",
+				event.getPayload());
+	}
+
 }

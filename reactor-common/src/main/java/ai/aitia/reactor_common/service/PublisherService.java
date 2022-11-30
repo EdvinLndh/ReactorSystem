@@ -1,4 +1,4 @@
-package eu.arrowhead.application.skeleton.publisher.service;
+package ai.aitia.reactor_common.service;
 
 import java.time.ZonedDateTime;
 import java.util.Base64;
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 
 import ai.aitia.arrowhead.application.library.ArrowheadService;
 import ai.aitia.arrowhead.application.library.util.ApplicationCommonConstants;
-import eu.arrowhead.application.skeleton.publisher.event.PresetEventType;
+import ai.aitia.reactor_common.event.PresetEventType;
 import eu.arrowhead.common.CommonConstants;
 import eu.arrowhead.common.Utilities;
 import eu.arrowhead.common.dto.shared.EventPublishRequestDTO;

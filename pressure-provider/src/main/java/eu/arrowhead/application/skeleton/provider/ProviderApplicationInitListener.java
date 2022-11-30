@@ -24,11 +24,11 @@ import org.springframework.stereotype.Component;
 import ai.aitia.arrowhead.application.library.ArrowheadService;
 import ai.aitia.arrowhead.application.library.config.ApplicationInitListener;
 import ai.aitia.arrowhead.application.library.util.ApplicationCommonConstants;
+import ai.aitia.reactor_common.PublisherConstants;
+import ai.aitia.reactor_common.event.PresetEventType;
+import ai.aitia.reactor_common.service.PublisherService;
 import eu.arrowhead.application.skeleton.provider.configuration.ConfigConstants;
-import eu.arrowhead.application.skeleton.publisher.PublisherConstants;
-import eu.arrowhead.application.skeleton.publisher.event.PresetEventType;
 import eu.arrowhead.application.skeleton.publisher.security.PublisherSecurityConfig;
-import eu.arrowhead.application.skeleton.publisher.service.PublisherService;
 import eu.arrowhead.common.CommonConstants;
 import eu.arrowhead.common.Utilities;
 import eu.arrowhead.common.core.CoreSystem;
@@ -99,15 +99,15 @@ public class ProviderApplicationInitListener extends ApplicationInitListener {
 			publishInitStartedEvent();
 		}
 
-		final ServiceRegistryRequestDTO temperatureService = createServiceRegistryRequest(
-				ConfigConstants.GET_LATEST_TEMP_READING_DEFINITION, ConfigConstants.GET_LATEST_TEMP_URI,
+		final ServiceRegistryRequestDTO pressureService = createServiceRegistryRequest(
+				ConfigConstants.GET_LATEST_PRESSURE_READING_DEFINITION, ConfigConstants.GET_LATEST_PRESSURE_URI,
 				HttpMethod.GET);
-		arrowheadService.forceRegisterServiceToServiceRegistry(temperatureService);
-		logger.info("Service registered: {}", ConfigConstants.GET_LATEST_TEMP_READING_DEFINITION);
+		arrowheadService.forceRegisterServiceToServiceRegistry(pressureService);
+		logger.info("Service registered: {}", ConfigConstants.GET_LATEST_PRESSURE_READING_DEFINITION);
 
-		TemperatureGenerator temperatureGenerator = new TemperatureGenerator();
-		applicationContext.getAutowireCapableBeanFactory().autowireBean(temperatureGenerator);
-		temperatureGenerator.start();
+		PressureGenerator pressureGenerator = new PressureGenerator();
+		applicationContext.getAutowireCapableBeanFactory().autowireBean(pressureGenerator);
+		pressureGenerator.start();
 
 	}
 
@@ -144,9 +144,9 @@ public class ProviderApplicationInitListener extends ApplicationInitListener {
 	// -------------------------------------------------------------------------------------------------
 	@Override
 	public void customDestroy() {
-		arrowheadService.unregisterServiceFromServiceRegistry(ConfigConstants.GET_LATEST_TEMP_READING_DEFINITION,
-				ConfigConstants.GET_LATEST_TEMP_URI);
-		logger.info("Service unregistered: {}", ConfigConstants.GET_LATEST_TEMP_READING_DEFINITION);
+		arrowheadService.unregisterServiceFromServiceRegistry(ConfigConstants.GET_LATEST_PRESSURE_READING_DEFINITION,
+				ConfigConstants.GET_LATEST_PRESSURE_URI);
+		logger.info("Service unregistered: {}", ConfigConstants.GET_LATEST_PRESSURE_READING_DEFINITION);
 		publishDestroyedEvent();
 	}
 

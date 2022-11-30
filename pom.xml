@@ -25,6 +25,7 @@
 	
 	<modules>
 	    <module>reactor-consumer</module>
+		<module>reactor-common</module>
 	    <module>temperature-provider</module>
 	    <module>control-rod-control-provider</module>
 	    <module>pressure-provider</module>

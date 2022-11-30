@@ -1,4 +1,4 @@
-package ai.aitia.demo.energy_forecast.provider;
+package ai.aitia.arrowhead.application.provider;
 
 public class RodControllerConstants {
 	public static final String GET_ROD_INSERTION_SERVICE_DEFINITION = "get-rod";

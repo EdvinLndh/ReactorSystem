@@ -10,13 +10,13 @@ import org.apache.logging.log4j.*;
 import org.springframework.stereotype.Component;
 
 @Component
-public class TemperatureDataService {
+public class PressureDataService {
 
-	private static final String csvPath = "temperatureData.csv";
+	private static final String csvPath = "pressureData.csv";
 
-	private final Logger logger = LogManager.getLogger(TemperatureDataService.class);
+	private final Logger logger = LogManager.getLogger(PressureDataService.class);
 
-	public void writeTempReadingToCSV(int reading) {
+	public void writePressureReadingToCSV(int reading) {
 		FileWriter csvWriter;
 
 		try {
@@ -32,7 +32,7 @@ public class TemperatureDataService {
 		}
 	}
 
-	public int getLatestTempReadingFromCSV() {
+	public int getLatestPressureReadingFromCSV() {
 		File csvFile = new File(csvPath);
 		if (csvFile.isFile()) {
 			return readFromFile(csvFile);

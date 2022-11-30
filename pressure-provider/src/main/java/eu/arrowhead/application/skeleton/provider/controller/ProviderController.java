@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import eu.arrowhead.application.skeleton.provider.configuration.ConfigConstants;
-import eu.arrowhead.application.skeleton.provider.services.TemperatureDataService;
+import eu.arrowhead.application.skeleton.provider.services.PressureDataService;
 import eu.arrowhead.common.CommonConstants;
 
 @RestController
@@ -15,7 +15,7 @@ public class ProviderController {
 	// members
 
 	@Autowired
-	private TemperatureDataService dataService;
+	private PressureDataService dataService;
 
 	// =================================================================================================
 	// methods
@@ -27,8 +27,8 @@ public class ProviderController {
 	}
 
 	// -------------------------------------------------------------------------------------------------
-	@GetMapping(path = ConfigConstants.GET_LATEST_TEMP_URI)
-	public int getLatestTempReading() {
-		return dataService.getLatestTempReadingFromCSV();
+	@GetMapping(path = ConfigConstants.GET_LATEST_PRESSURE_URI)
+	public int getLatestPressureReading() {
+		return dataService.getLatestPressureReadingFromCSV();
 	}
 }

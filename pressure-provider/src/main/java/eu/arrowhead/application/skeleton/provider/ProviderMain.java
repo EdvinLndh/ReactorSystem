@@ -10,10 +10,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 
+import ai.aitia.reactor_common.PublisherConstants;
+import ai.aitia.reactor_common.event.PresetEventType;
+import ai.aitia.reactor_common.service.PublisherService;
 import eu.arrowhead.application.skeleton.provider.configuration.ConfigConstants;
-import eu.arrowhead.application.skeleton.publisher.PublisherConstants;
-import eu.arrowhead.application.skeleton.publisher.event.PresetEventType;
-import eu.arrowhead.application.skeleton.publisher.service.PublisherService;
 import eu.arrowhead.common.CommonConstants;
 
 @SpringBootApplication

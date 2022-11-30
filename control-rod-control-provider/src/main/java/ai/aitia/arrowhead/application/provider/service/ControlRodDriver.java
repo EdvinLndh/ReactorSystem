@@ -1,4 +1,4 @@
-package ai.aitia.demo.energy_forecast.provider.service;
+package ai.aitia.arrowhead.application.provider.service;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -39,8 +39,13 @@ public class ControlRodDriver {
 	public int getLatestTemperatureReading() {
 		final OrchestrationResultDTO orchestrationResult = orchestrate(
 				ConfigConstants.GET_LATEST_TEMP_READING_DEFINITION);
-		return consumeTemperatureReadingService(orchestrationResult);
+		return consumeService(orchestrationResult);
+	}
 
+	public int getLatestPressureReading() {
+		final OrchestrationResultDTO orchestrationResult = orchestrate(
+				ConfigConstants.GET_LATEST_PRESSURE_READING_DEFINITION);
+		return consumeService(orchestrationResult);
 	}
 
 	// =================================================================================================
@@ -75,7 +80,7 @@ public class ControlRodDriver {
 	}
 
 	// -------------------------------------------------------------------------------------------------
-	private int consumeTemperatureReadingService(final OrchestrationResultDTO orchestrationResult) {
+	private int consumeService(final OrchestrationResultDTO orchestrationResult) {
 		final String token = orchestrationResult.getAuthorizationTokens() == null ? null
 				: orchestrationResult.getAuthorizationTokens().get(getInterface());
 
@@ -85,29 +90,6 @@ public class ControlRodDriver {
 				orchestrationResult.getServiceUri(),
 				getInterface(), token, null);
 	}
-
-	// -------------------------------------------------------------------------------------------------
-	// private EnergyDetailsListDTO consumeEnergyDetailsService(final
-	// OrchestrationResultDTO orchestrationResult,
-	// final long building, final long from, final long to) {
-	// final String token = orchestrationResult.getAuthorizationTokens() == null ?
-	// null
-	// : orchestrationResult.getAuthorizationTokens().get(getInterface());
-	// final String[] queryParam = {
-	// orchestrationResult.getMetadata().get(EFCommonConstants.REQUEST_PARAM_KEY_BUILDING),
-	// String.valueOf(building),
-	// orchestrationResult.getMetadata().get(EFCommonConstants.REQUEST_PARAM_KEY_FROM),
-	// String.valueOf(from),
-	// orchestrationResult.getMetadata().get(EFCommonConstants.REQUEST_PARAM_KEY_TO),
-	// String.valueOf(to) };
-
-	// return arrowheadService.consumeServiceHTTP(EnergyDetailsListDTO.class,
-	// HttpMethod.valueOf(orchestrationResult.getMetadata().get(EFCommonConstants.HTTP_METHOD)),
-	// orchestrationResult.getProvider().getAddress(),
-	// orchestrationResult.getProvider().getPort(),
-	// orchestrationResult.getServiceUri(),
-	// getInterface(), token, null, queryParam);
-	// }
 
 	// -------------------------------------------------------------------------------------------------
 	private String getInterface() {

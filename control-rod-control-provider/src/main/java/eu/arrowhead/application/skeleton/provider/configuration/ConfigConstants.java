@@ -12,6 +12,8 @@ public class ConfigConstants {
 	public static final String INTERFACE_INSECURE = "HTTP-INSECURE-JSON";
 	public static final String GET_LATEST_TEMP_READING_DEFINITION = "get-latest-temp";
 	public static final String GET_LATEST_TEMP_URI = "/latest-temp";
+	public static final String GET_LATEST_PRESSURE_READING_DEFINITION = "get-latest-pressure";
+	public static final String GET_LATEST_PRESSURE_URI = "/latest-pressure";
 
 	// =================================================================================================
 	// assistant methods
