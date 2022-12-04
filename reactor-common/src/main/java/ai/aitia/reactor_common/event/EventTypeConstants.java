@@ -5,11 +5,10 @@ public class EventTypeConstants {
 	// =================================================================================================
 	// members
 
-	public static final String EVENT_TYPE_START_INIT = "START_INIT";
-	public static final String EVENT_TYPE_START_RUN = "START_RUN";
-	public static final String EVENT_TYPE_REQUEST_RECEIVED = "REQUEST_RECEIVED";
-	public static final String EVENT_TYPE_REQUEST_RECEIVED_METADATA_REQUEST_TYPE = "REQUEST_TYPE";
-	public static final String EVENT_TYPE_PUBLISHER_DESTROYED = "PUBLISHER_DESTROYED";
+	public static final String EVENT_TYPE_TEMPERATURE_START_INIT = "TEMPERATURE_START_INIT";
+	public static final String EVENT_TYPE_PRESSURE_START_INIT = "PRESSURE_START_INIT";
+	public static final String EVENT_TYPE_TEMPERATURE_PROVIDER_DESTROYED = "TEMPERATURE_PROVIDER_DESTROYED";
+	public static final String EVENT_TYPE_PRESSURE_PROVIDER_DESTROYED = "PRESSURE_PROVIDER_DESTROYED";
 	public static final String CRITICAL_TEMPERATURE = "CRITICAL_TEMPERATURE";
 	public static final String CRITICAL_PRESSURE = "CRITICAL_PRESSURE";
 

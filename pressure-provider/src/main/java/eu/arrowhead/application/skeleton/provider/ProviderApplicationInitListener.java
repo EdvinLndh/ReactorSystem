@@ -185,8 +185,8 @@ public class ProviderApplicationInitListener extends ApplicationInitListener {
 
 	private void publishDestroyedEvent() {
 		logger.debug("publishdestroyevent started...");
-		publisherService.publish(PresetEventType.PUBLISHER_DESTROYED, (Map<String, String>) null,
-				PublisherConstants.PUBLISHR_DESTROYED_EVENT_PAYLOAD);
+		publisherService.publish(PresetEventType.PRESSURE_PROVIDER_DESTROYED, (Map<String, String>) null,
+				PublisherConstants.PRESSURE_PROVIDER_DESTROYED_PAYLOAD);
 
 	}
 
@@ -194,8 +194,8 @@ public class ProviderApplicationInitListener extends ApplicationInitListener {
 	private void publishInitStartedEvent() {
 		logger.debug("publishInitStartedEvent started...");
 
-		publisherService.publish(PresetEventType.START_INIT, (Map<String, String>) null,
-				PublisherConstants.START_INIT_EVENT_PAYLOAD);
+		publisherService.publish(PresetEventType.PRESSURE_START_INIT, (Map<String, String>) null,
+				PublisherConstants.PRESSURE_START_PAYLOAD);
 	}
 
 }

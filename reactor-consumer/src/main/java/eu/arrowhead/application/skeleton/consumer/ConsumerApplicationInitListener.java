@@ -62,6 +62,8 @@ public class ConsumerApplicationInitListener extends ApplicationInitListener {
 	@Autowired
 	private ConfigEventProperties configEventProperties;
 
+	private ConsumerTaskRunner taskRunner;
+
 	private final Logger logger = LogManager.getLogger(ConsumerApplicationInitListener.class);
 
 	// =================================================================================================
@@ -104,10 +106,14 @@ public class ConsumerApplicationInitListener extends ApplicationInitListener {
 			arrowheadService.updateCoreServiceURIs(CoreSystem.EVENTHANDLER);
 		}
 
-		ConsumerTaskRunner taskRunner = applicationContext.getBean(SubscriberConstants.CONSUMER_TASK,
+		this.taskRunner = applicationContext.getBean(SubscriberConstants.CONSUMER_TASK,
 				ConsumerTaskRunner.class);
 		taskRunner.start();
 
+	}
+
+	public ConsumerTaskRunner getTaskRunner() {
+		return this.taskRunner;
 	}
 
 	// -------------------------------------------------------------------------------------------------

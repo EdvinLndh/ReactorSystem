@@ -1,5 +1,7 @@
 package eu.arrowhead.application.skeleton.consumer;
 
+import java.util.concurrent.Flow.Publisher;
+
 import org.apache.logging.log4j.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -7,6 +9,7 @@ import org.springframework.http.HttpMethod;
 
 import ai.aitia.arrowhead.application.library.ArrowheadService;
 import ai.aitia.arrowhead.application.library.util.ApplicationCommonConstants;
+import ai.aitia.reactor_common.PublisherConstants;
 import ai.aitia.reactor_common.dto.RodInsertionResponseDTO;
 import eu.arrowhead.common.CommonConstants;
 import eu.arrowhead.common.SSLProperties;
@@ -43,47 +46,69 @@ public class ConsumerTaskRunner extends Thread {
 	@Value(ApplicationCommonConstants.$APPLICATION_SERVER_PORT_WD)
 	private int applicationSystemPort;
 
+	private boolean temperatureProviderActive = true;
+
+	private boolean pressureProviderActive = true;
+
 	private final Logger logger = LogManager.getLogger(ConsumerTaskRunner.class);
 
 	@Override
 	public void run() {
-		OrchestrationResultDTO rodOrchestration = orchestrateRodService();
+		OrchestrationResultDTO rodOrchestration = orchestrateService(
+				PublisherConstants.GET_ROD_INSERTION_SERVICE_DEFINITION);
+		OrchestrationResultDTO pressureOrchestration = orchestrateService(
+				PublisherConstants.GET_PRESSURE_ACTION_SERVICE_DEFINITION);
 		while (true) {
-			if (rodOrchestration != null) {
+			if (rodOrchestration != null && pressureOrchestration != null && this.temperatureProviderActive
+					&& this.pressureProviderActive) {
 				try {
 
 					RodInsertionResponseDTO rodInsertionResponse = consumeRodService(rodOrchestration);
-					logger.info("Consumed rod insertion service. Inserting rods at {}%",
+					String pressureResponse = consumePressureService(pressureOrchestration);
+					logger.info(
+							"Consumed rod insertion service. \n" + tabs() + "Temperature at: {} {}\n" + tabs()
+									+ "Pressure at: {} {}\n" + tabs() + "Inserting rods at {}%",
+							rodInsertionResponse.getTemperatureReading(), rodInsertionResponse.getTemperatureScale(),
+							rodInsertionResponse.getPressureReading(), rodInsertionResponse.getPressureScale(),
 							rodInsertionResponse.getRodInsertionPrecentage());
+
+					logger.info("Taking pressure action: " + pressureResponse);
 
 				} catch (UnavailableServerException e) {
 					logger.warn("Rod service unavaible, caught exception: {}", e.getMessage());
+					temperatureProviderActive = false;
+					pressureProviderActive = false;
 				}
 			} else {
-				logger.info("Trying to reach rod service again.");
-				rodOrchestration = orchestrateRodService();
+				logger.info("Some required systems might be down, trying to reorchestrate to rod service.");
+				rodOrchestration = orchestrateService(PublisherConstants.GET_ROD_INSERTION_SERVICE_DEFINITION);
+				pressureOrchestration = orchestrateService(
+						PublisherConstants.GET_PRESSURE_ACTION_SERVICE_DEFINITION);
 			}
 
 			try {
-				Thread.sleep(5000);
+				Thread.sleep(ConsumerConstants.SLEEP_TIME_MILLIS);
 			} catch (InterruptedException e) {
 				logger.warn("Interrupted by {}", e);
 			}
 		}
 	}
 
-	public OrchestrationResultDTO orchestrateRodService() {
+	private String tabs() {
+		return "\t\t\t\t\t\t\t\t\t\t\t\t\t";
+	}
+
+	public OrchestrationResultDTO orchestrateService(String service_definition) {
 		final Builder orchestrationFormBuilder = arrowheadService.getOrchestrationFormBuilder();
 
 		final ServiceQueryFormDTO requestedService = new ServiceQueryFormDTO();
-		requestedService.setServiceDefinitionRequirement(ConsumerConstants.GET_ROD_INSERTION_SERVICE_DEFINITION);
+		requestedService.setServiceDefinitionRequirement(service_definition);
 
 		orchestrationFormBuilder.requestedService(requestedService)
 				.flag(Flag.MATCHMAKING, true)
 				.flag(Flag.OVERRIDE_STORE, true);
 
 		final OrchestrationFormRequestDTO orchestrationRequest = orchestrationFormBuilder.build();
-		printOut(orchestrationRequest);
 
 		OrchestrationResponseDTO response = null;
 		try {
@@ -123,7 +148,40 @@ public class ConsumerTaskRunner extends Thread {
 
 	}
 
-	private void printOut(final Object object) {
-		System.out.println(Utilities.toPrettyJson(Utilities.toJson(object)));
+	public String consumePressureService(OrchestrationResultDTO result) throws UnavailableServerException {
+		final HttpMethod httpMethod = HttpMethod.GET;
+		final String address = result.getProvider().getAddress();
+		final int port = result.getProvider().getPort();
+		final String serviceUri = result.getServiceUri();
+		final String interfaceName = result.getInterfaces().get(0).getInterfaceName();
+		String token = null;
+		if (result.getAuthorizationTokens() != null) {
+			token = result.getAuthorizationTokens().get(interfaceName);
+		}
+		final Object payload = null;
+
+		final String consumedService = arrowheadService.consumeServiceHTTP(
+				String.class, httpMethod,
+				address, port,
+				serviceUri, interfaceName, token, payload);
+
+		return consumedService;
+
+	}
+
+	public boolean isPressureProviderActive() {
+		return pressureProviderActive;
+	}
+
+	public void setPressureProviderActive(boolean pressureProviderActive) {
+		this.pressureProviderActive = pressureProviderActive;
+	}
+
+	public boolean isTemperatureProviderActive() {
+		return temperatureProviderActive;
+	}
+
+	public void setTemperatureProviderActive(boolean temperatureProviderActive) {
+		this.temperatureProviderActive = temperatureProviderActive;
 	}
 }

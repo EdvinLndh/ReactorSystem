@@ -34,4 +34,10 @@ public class RodControllerController {
 	public RodInsertionResponseDTO getControlRodInsertion() {
 		return rodControlService.calculateInsertion();
 	}
+
+	@GetMapping(path = RodControllerConstants.GET_PRESSURE_ACTION_URI)
+	@ResponseBody
+	public String getPressureAction() {
+		return rodControlService.getPressureAction();
+	}
 }

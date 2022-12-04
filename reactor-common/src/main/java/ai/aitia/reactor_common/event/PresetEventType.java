@@ -10,10 +10,11 @@ import eu.arrowhead.common.Utilities;
 public enum PresetEventType {
 	// =================================================================================================
 	// elements
-	START_INIT(EventTypeConstants.EVENT_TYPE_START_INIT, List.of()),
-	START_RUN(EventTypeConstants.EVENT_TYPE_START_RUN, List.of()),
-	REQUEST_RECEIVED(EventTypeConstants.EVENT_TYPE_REQUEST_RECEIVED, List.of()),
-	PUBLISHER_DESTROYED(EventTypeConstants.EVENT_TYPE_PUBLISHER_DESTROYED, List.of()),
+
+	TEMPERATURE_START_INIT(EventTypeConstants.EVENT_TYPE_TEMPERATURE_START_INIT, List.of()),
+	PRESSURE_START_INIT(EventTypeConstants.EVENT_TYPE_PRESSURE_START_INIT, List.of()),
+	TEMPERATURE_PROVIDER_DESTROYED(EventTypeConstants.EVENT_TYPE_TEMPERATURE_PROVIDER_DESTROYED, List.of()),
+	PRESSURE_PROVIDER_DESTROYED(EventTypeConstants.EVENT_TYPE_PRESSURE_PROVIDER_DESTROYED, List.of()),
 	CRITICAL_PRESSURE(EventTypeConstants.CRITICAL_PRESSURE, List.of()),
 	CRITICAL_TEMPERATURE(EventTypeConstants.CRITICAL_TEMPERATURE, List.of());
 

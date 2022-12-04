@@ -90,6 +90,14 @@ public class ProviderApplicationInitListener extends ApplicationInitListener {
 		arrowheadService.forceRegisterServiceToServiceRegistry(rodService);
 
 		logger.info("Service registered: {}", RodControllerConstants.GET_ROD_INSERTION_SERVICE_DEFINITION);
+
+		final ServiceRegistryRequestDTO pressureService = createServiceRegistryRequest(
+				RodControllerConstants.GET_PRESSURE_ACTION_SERVICE_DEFINITION,
+				RodControllerConstants.GET_PRESSURE_ACTION_URI, HttpMethod.GET);
+		arrowheadService.forceRegisterServiceToServiceRegistry(pressureService);
+
+		logger.info("Service registered: {}", RodControllerConstants.GET_PRESSURE_ACTION_SERVICE_DEFINITION);
+
 	}
 
 	// -------------------------------------------------------------------------------------------------
@@ -100,6 +108,11 @@ public class ProviderApplicationInitListener extends ApplicationInitListener {
 				RodControllerConstants.GET_ROD_INSERTION_SERVICE_DEFINITION,
 				RodControllerConstants.GET_ROD_INSERTION_URI);
 		logger.info("Service unregistered: {}", RodControllerConstants.GET_ROD_INSERTION_SERVICE_DEFINITION);
+
+		arrowheadService.unregisterServiceFromServiceRegistry(
+				RodControllerConstants.GET_PRESSURE_ACTION_SERVICE_DEFINITION,
+				RodControllerConstants.GET_PRESSURE_ACTION_URI);
+		logger.info("Service unregistered: {}", RodControllerConstants.GET_PRESSURE_ACTION_SERVICE_DEFINITION);
 	}
 
 	// =================================================================================================
