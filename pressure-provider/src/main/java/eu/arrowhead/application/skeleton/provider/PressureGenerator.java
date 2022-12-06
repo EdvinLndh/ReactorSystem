@@ -6,7 +6,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import ai.aitia.reactor_common.PublisherConstants;
 import ai.aitia.reactor_common.event.PresetEventType;
 import ai.aitia.reactor_common.service.PublisherService;
 import eu.arrowhead.application.skeleton.provider.configuration.ConfigConstants;

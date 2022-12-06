@@ -2,14 +2,12 @@ package eu.arrowhead.application.skeleton.subscriber.controller;
 
 import org.apache.logging.log4j.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import eu.arrowhead.application.skeleton.consumer.ConsumerApplicationInitListener;
-import eu.arrowhead.application.skeleton.consumer.ConsumerTaskRunner;
 import eu.arrowhead.application.skeleton.subscriber.*;
 import eu.arrowhead.common.dto.shared.EventDTO;
 

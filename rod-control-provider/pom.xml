@@ -8,7 +8,7 @@
     <version>4.4.0.2</version>
   </parent>
   
-  <artifactId>control-rod-control-provider</artifactId>
+  <artifactId>rod-control-provider</artifactId>
   <name>Arrowhead Control Rod Provider</name>
 
   	<dependencies>
