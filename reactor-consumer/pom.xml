@@ -8,7 +8,7 @@
   	</parent>
 	
 	<artifactId>reactor-consumer</artifactId>
-	<name>Arrowhead Consumer Skeleton</name>
+	<name>Arrowhead Reactor Consumer</name>
 
 		<dependencies>
 		<dependency>

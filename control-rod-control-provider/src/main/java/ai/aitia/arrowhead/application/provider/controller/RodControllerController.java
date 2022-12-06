@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import ai.aitia.arrowhead.application.provider.RodControllerConstants;
 import ai.aitia.arrowhead.application.provider.service.RodControlService;
+import ai.aitia.reactor_common.dto.PressureActionResponseDTO;
 import ai.aitia.reactor_common.dto.RodInsertionResponseDTO;
 import eu.arrowhead.common.CommonConstants;
 
@@ -37,7 +38,7 @@ public class RodControllerController {
 
 	@GetMapping(path = RodControllerConstants.GET_PRESSURE_ACTION_URI)
 	@ResponseBody
-	public String getPressureAction() {
+	public PressureActionResponseDTO getPressureAction() {
 		return rodControlService.getPressureAction();
 	}
 }

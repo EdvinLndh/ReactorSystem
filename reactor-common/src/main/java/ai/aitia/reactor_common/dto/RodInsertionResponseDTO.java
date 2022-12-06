@@ -7,27 +7,20 @@ public class RodInsertionResponseDTO implements Serializable {
 
 	private int temperatureReading;
 	private String temperatureScale;
-	private int pressureReading;
-	private String pressureScale;
 	private int rodInsertionPrecentage;
 
 	public RodInsertionResponseDTO() {
 	}
 
-	public RodInsertionResponseDTO(int temperatureReading, String temperatureScale, int pressureReading,
-			String pressureScale, int rodInsertionPrecentage) {
+	public RodInsertionResponseDTO(int temperatureReading, String temperatureScale, int rodInsertionPrecentage) {
 		this.temperatureReading = temperatureReading;
 		this.temperatureScale = temperatureScale;
-		this.pressureReading = pressureReading;
-		this.pressureScale = pressureScale;
 		this.rodInsertionPrecentage = rodInsertionPrecentage;
 	}
 
-	public RodInsertionResponseDTO(int temperatureReading, int pressureReading, int rodInsertionPrecentage) {
+	public RodInsertionResponseDTO(int temperatureReading, int rodInsertionPrecentage) {
 		this.temperatureReading = temperatureReading;
 		this.temperatureScale = "celsius";
-		this.pressureReading = pressureReading;
-		this.pressureScale = "MPa";
 		this.rodInsertionPrecentage = rodInsertionPrecentage;
 	}
 
@@ -45,22 +38,6 @@ public class RodInsertionResponseDTO implements Serializable {
 
 	public void setTemperatureScale(String temperatureScale) {
 		this.temperatureScale = temperatureScale;
-	}
-
-	public int getPressureReading() {
-		return pressureReading;
-	}
-
-	public void setPressureReading(int pressureReading) {
-		this.pressureReading = pressureReading;
-	}
-
-	public String getPressureScale() {
-		return pressureScale;
-	}
-
-	public void setPressureScale(String pressureScale) {
-		this.pressureScale = pressureScale;
 	}
 
 	public int getRodInsertionPrecentage() {

@@ -8,7 +8,7 @@
   	</parent>
 	
 	<artifactId>temperature-provider</artifactId>
-	<name>Arrowhead Provider Skeleton</name>
+	<name>Arrowhead Temperature Provider</name>
 
 	<dependencies>
 		<dependency>

@@ -1,7 +1,5 @@
 package eu.arrowhead.application.skeleton.consumer;
 
-import java.util.concurrent.Flow.Publisher;
-
 import org.apache.logging.log4j.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -10,10 +8,10 @@ import org.springframework.http.HttpMethod;
 import ai.aitia.arrowhead.application.library.ArrowheadService;
 import ai.aitia.arrowhead.application.library.util.ApplicationCommonConstants;
 import ai.aitia.reactor_common.PublisherConstants;
+import ai.aitia.reactor_common.dto.PressureActionResponseDTO;
 import ai.aitia.reactor_common.dto.RodInsertionResponseDTO;
 import eu.arrowhead.common.CommonConstants;
 import eu.arrowhead.common.SSLProperties;
-import eu.arrowhead.common.Utilities;
 import eu.arrowhead.common.dto.shared.OrchestrationFormRequestDTO;
 import eu.arrowhead.common.dto.shared.OrchestrationResponseDTO;
 import eu.arrowhead.common.dto.shared.OrchestrationResultDTO;
@@ -64,15 +62,15 @@ public class ConsumerTaskRunner extends Thread {
 				try {
 
 					RodInsertionResponseDTO rodInsertionResponse = consumeRodService(rodOrchestration);
-					String pressureResponse = consumePressureService(pressureOrchestration);
+					PressureActionResponseDTO pressureResponse = consumePressureService(pressureOrchestration);
 					logger.info(
 							"Consumed rod insertion service. \n" + tabs() + "Temperature at: {} {}\n" + tabs()
 									+ "Pressure at: {} {}\n" + tabs() + "Inserting rods at {}%",
 							rodInsertionResponse.getTemperatureReading(), rodInsertionResponse.getTemperatureScale(),
-							rodInsertionResponse.getPressureReading(), rodInsertionResponse.getPressureScale(),
+							pressureResponse.getPressureReading(), pressureResponse.getPressureScale(),
 							rodInsertionResponse.getRodInsertionPrecentage());
 
-					logger.info("Taking pressure action: " + pressureResponse);
+					logger.info("Taking pressure action: " + pressureResponse.getPressureAction());
 
 				} catch (UnavailableServerException e) {
 					logger.warn("Rod service unavaible, caught exception: {}", e.getMessage());
@@ -148,7 +146,8 @@ public class ConsumerTaskRunner extends Thread {
 
 	}
 
-	public String consumePressureService(OrchestrationResultDTO result) throws UnavailableServerException {
+	public PressureActionResponseDTO consumePressureService(OrchestrationResultDTO result)
+			throws UnavailableServerException {
 		final HttpMethod httpMethod = HttpMethod.GET;
 		final String address = result.getProvider().getAddress();
 		final int port = result.getProvider().getPort();
@@ -160,8 +159,8 @@ public class ConsumerTaskRunner extends Thread {
 		}
 		final Object payload = null;
 
-		final String consumedService = arrowheadService.consumeServiceHTTP(
-				String.class, httpMethod,
+		final PressureActionResponseDTO consumedService = arrowheadService.consumeServiceHTTP(
+				PressureActionResponseDTO.class, httpMethod,
 				address, port,
 				serviceUri, interfaceName, token, payload);
 

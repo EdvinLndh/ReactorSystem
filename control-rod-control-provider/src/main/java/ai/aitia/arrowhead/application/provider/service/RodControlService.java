@@ -1,13 +1,12 @@
 package ai.aitia.arrowhead.application.provider.service;
 
-import java.util.concurrent.Flow.Publisher;
-
 import org.apache.logging.log4j.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import ai.aitia.arrowhead.application.provider.RodControllerConstants;
 import ai.aitia.reactor_common.PublisherConstants;
+import ai.aitia.reactor_common.dto.PressureActionResponseDTO;
 import ai.aitia.reactor_common.dto.RodInsertionResponseDTO;
 
 @Component
@@ -23,16 +22,19 @@ public class RodControlService {
 
 	// =================================================================================================
 	// methods
-	public String getPressureAction() {
+	public PressureActionResponseDTO getPressureAction() {
 		int latestPressure = controlRodDriver.getLatestPressureReading();
-		String response = null;
+		PressureActionResponseDTO response = new PressureActionResponseDTO();
+		response.setPressureScale("MPa");
+
+		response.setPressureReading(latestPressure);
 
 		if (latestPressure > RodControllerConstants.HI_PRESSURE_LEVELS) {
 			logger.info("High pressure levels. Action: " + PublisherConstants.PRESSURE_ACTION_OPEN);
-			response = PublisherConstants.PRESSURE_ACTION_OPEN;
+			response.setPressureAction(PublisherConstants.PRESSURE_ACTION_OPEN);
 		} else {
 			logger.info("Normal pressure levels. Action: " + PublisherConstants.PRESSURE_ACTION_NONE);
-			response = PublisherConstants.PRESSURE_ACTION_NONE;
+			response.setPressureAction(PublisherConstants.PRESSURE_ACTION_NONE);
 		}
 
 		return response;
@@ -42,7 +44,7 @@ public class RodControlService {
 		int latestTemp = controlRodDriver.getLatestTemperatureReading();
 
 		RodInsertionResponseDTO response = new RodInsertionResponseDTO();
-		response.setPressureScale("MPa");
+
 		response.setTemperatureScale("Celsius");
 
 		if (latestTemp < RodControllerConstants.LOW_TEMP_LEVEL) {
