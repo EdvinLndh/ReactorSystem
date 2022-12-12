@@ -23,14 +23,6 @@
 ### VS Code ###
 .vscode/
 wrapper
-/control-rod-control-provider/target
-/temperature-provider/target
-/application-skeleton-consumer/target
-/application-skeleton-publisher/target
-/application-skeleton-subscriber/target
-/documentation
-/application-skeleton-publisher
-/application-skeleton-subscriber
 /**/target
 /mvnw
 /mvnw.cmd

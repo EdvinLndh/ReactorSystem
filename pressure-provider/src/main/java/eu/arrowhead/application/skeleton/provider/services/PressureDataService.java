@@ -55,7 +55,6 @@ public class PressureDataService {
 				data = row.split(",");
 			}
 			csvReader.close();
-			logger.info("Read {},{} from file.", data[0], data[1]);
 
 			return Integer.valueOf(data[1].trim());
 		} catch (IOException e) {
